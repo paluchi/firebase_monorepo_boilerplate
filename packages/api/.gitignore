@@ -1,0 +1,14 @@
+# Compiled JavaScript files
+lib/**/*.js
+lib/**/*.js.map
+lib
+
+# TypeScript v1 declaration files
+typings/
+
+# Node.js dependency directory
+node_modules/
+*.local
+
+# Compiled TypeScript files
+tsconfig.tsbuildinfo

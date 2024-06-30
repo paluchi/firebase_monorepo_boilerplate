@@ -1,0 +1,28 @@
+{
+  "name": "@myapp/api",
+  "scripts": {
+    "build": "tsc && tsc-alias -v",
+    "build:watch": "tsc --watch",
+    "serve": "firebase emulators:start --only functions,firestore,auth",
+    "shell": "npm run build && firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log"
+  },
+  "engines": {
+    "node": "18"
+  },
+  "main": "lib/index.js",
+  "dependencies": {
+    "express": "^4.19.2",
+    "firebase-backend": "^0.2.5",
+    "firebase-functions": "^5.0.1",
+    "@myapp/core": "file:../core",
+    "@myapp/adapters": "file:../adapters"
+  },
+  "devDependencies": {
+    "firebase-functions-test": "^3.1.0",
+    "tsc-alias": "^1.8.8"
+  },
+  "private": true
+}

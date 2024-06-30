@@ -1,0 +1,29 @@
+{
+  "name": "myapp",
+  "version": "1.0.0",
+  "scripts": {
+    "build-react": "cd packages/web-app && npm run build",
+    "build": "tsc -b packages/core packages/adapters && cd packages/api && npm run build",
+    "serve-functions": "npm run build && tsc-watch -p packages/api/tsconfig.json --onSuccess \"firebase emulators:start --only functions,firestore,auth\"",
+    "start-react": "cd packages/web-app && npm start",
+    "dev": "concurrently \"npm run serve-functions\" \"npm run start-react\"",
+    "test": "tsc --build"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "tsc-watch": "^6.2.0"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "firebase": "^10.12.2",
+    "firebase-admin": "^12.2.0",
+    "firebase-tools": "^13.11.4",
+    "typescript": "^4.9.0",
+    "zod": "^3.23.8"
+  },
+  "workspaces": [
+    "packages/*"
+  ]
+}

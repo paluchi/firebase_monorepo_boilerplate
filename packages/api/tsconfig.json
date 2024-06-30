@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./",
+    "module": "commonjs",
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "outDir": "./lib",
+    "rootDir": "./src",
+    "sourceMap": true,
+    "strict": true,
+    "target": "es2017",
+    "composite": true,
+    "paths": {
+      "@myapp/core/*": ["../core/src/*"],
+      "@myapp/adapters/*": ["../adapters/src/*"]
+    }
+  },
+  "compileOnSave": true,
+  "include": [
+    "src"
+  ],
+  "references": [
+    { "path": "../core" },
+    { "path": "../adapters" }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "name": "@myapp/adapters",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "clean": "rimraf lib",
+    "build": "tsc",
+    "build:watch": "tsc --watch",
+    "@myapp/core": "*"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}
