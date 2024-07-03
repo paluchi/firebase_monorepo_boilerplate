@@ -1,19 +1,14 @@
-import { TodoFirebaseRepository } from "../../adapters/src/repositories/firebase/Todo";
-import { TodoService } from "../../core/src/services/Todo";
-import * as admin from "firebase-admin";
+import { TodoFirebaseRepository } from "@repo/adapters/repositories/firebase/Todo.js";
+import { TodoService } from "../../core/src/services/Todo/index.js";
+import { initializeApp } from "firebase-admin/app";
+import { getFirestore } from "firebase-admin/firestore";
 
 let todoServiceInstance: TodoService | null = null;
 
-function initializeFirebaseApp() {
-  if (!admin.apps.length) {
-    admin.initializeApp();
-  }
-}
-
 function getTodoService() {
   if (!todoServiceInstance) {
-    initializeFirebaseApp();
-    const db = admin.firestore();
+    initializeApp();
+    const db = getFirestore();
     const todoRepository = new TodoFirebaseRepository(db);
     todoServiceInstance = new TodoService(todoRepository);
   }

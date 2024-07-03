@@ -12,7 +12,7 @@
     "composite": true,
     "declaration": true,
     "paths": {
-      "@myapp/core": ["../core/lib"]
+      "@repo/core": ["../core/lib"]
     }
   },
   "compileOnSave": true,

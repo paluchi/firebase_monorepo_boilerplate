@@ -1,18 +1,19 @@
 {
   "compilerOptions": {
+    "target": "ES2020",
+    "module": "nodenext",
+    "lib": ["ES2020", "DOM"],
     "baseUrl": "./",
-    "module": "commonjs",
     "noImplicitReturns": true,
     "noUnusedLocals": true,
     "outDir": "./lib",
     "rootDir": "./src",
     "sourceMap": true,
     "strict": true,
-    "target": "es2017",
     "composite": true,
     "paths": {
-      "@myapp/core/*": ["../core/src/*"],
-      "@myapp/adapters/*": ["../adapters/src/*"]
+      "@repo/core/*": ["../core/src/*"],
+      "@repo/adapters/*": ["../adapters/src/*"]
     }
   },
   "compileOnSave": true,

@@ -1,5 +1,5 @@
 {
-  "name": "@myapp/core",
+  "name": "@repo/core",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
@@ -9,5 +9,8 @@
   },
   "author": "",
   "license": "ISC",
-  "description": ""
+  "description": "",
+  "dependencies": {
+    "zod": "^3.23.8"
+  }
 }

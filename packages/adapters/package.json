@@ -1,12 +1,12 @@
 {
-  "name": "@myapp/adapters",
+  "name": "@repo/adapters",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
     "clean": "rimraf lib",
     "build": "tsc",
     "build:watch": "tsc --watch",
-    "@myapp/core": "*"
+    "@repo/core": "workspace:*"
   },
   "author": "",
   "license": "ISC",

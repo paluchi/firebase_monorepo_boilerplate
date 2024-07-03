@@ -1,99 +1,44 @@
-import * as fs from "fs";
-import * as path from "path";
-import * as express from "express";
-import * as functions from "firebase-functions";
+import { https } from "firebase-functions";
+import { initializeApp } from "firebase-admin/app";
+import { getFirestore } from "firebase-admin/firestore";
+import { todoService } from "./context.js";
 
-const availableMethods = ["get", "post", "put", "patch", "delete"];
+todoService.createTodo;
 
-const app: express.Application = express();
+// Initialize Firebase app
+// initializeApp();
+// const db = getFirestore();
 
-// Middleware to parse JSON bodies
-app.use(express.json());
-
-const getEndpointFiles = (dir: string): string[] => {
-  let results: string[] = [];
-  const list = fs.readdirSync(dir);
-
-  list.forEach((file) => {
-    const filePath = path.resolve(dir, file);
-    const stat = fs.statSync(filePath);
-
-    if (stat && stat.isDirectory()) {
-      results = results.concat(getEndpointFiles(filePath));
-    } else if (file.endsWith(".endpoint.js") || file.endsWith(".reactive.js")) {
-      results.push(filePath);
-    }
-  });
-
-  return results;
-};
-
-const getRoutePath = (filePath: string, baseDir: string): string => {
-  let relativePath = path.relative(baseDir, filePath);
-  const pathParts = relativePath.split(path.sep);
-
-  // Remove the file extension and method part from the last part
-  const fileName = pathParts.pop();
-  if (!fileName) return "";
-
-  const [functionName] = fileName.split(".");
-
-  // Filter out parts wrapped in parentheses and replace square brackets with colons
-  const routeParts = pathParts
-    .filter((part) => !part.startsWith("(") && !part.endsWith(")"))
-    .map((part) => part.replace(/\[(.*?)\]/g, ":$1"));
-  routeParts.push(functionName);
-
-  // Pop the last part as it is the method
-  routeParts.pop();
-
-  return `/${routeParts.join("/")}`;
-};
-
-const baseDir = path.join(__dirname, "methods");
-const endpointFiles = getEndpointFiles(baseDir);
-
-// Sort endpoint files by specificity and then by presence of parameters
-endpointFiles
-  .sort((a, b) => {
-    const aParts = getRoutePath(a, baseDir).split("/");
-    const bParts = getRoutePath(b, baseDir).split("/");
-
-    // First sort by length (more specific routes first)
-    if (bParts.length !== aParts.length) {
-      return bParts.length - aParts.length;
-    }
-
-    // If lengths are equal, sort alphabetically
-    const aPath = getRoutePath(a, baseDir);
-    const bPath = getRoutePath(b, baseDir);
-    return aPath.localeCompare(bPath);
-  })
-  .reverse();
-
-endpointFiles.forEach((file) => {
-  const methodCallback = require(file).default;
-  const fileName = path.basename(file);
-
-  const method = fileName.split(".")[0];
-
-  if (method === "reactive") {
-    const [functionName] = fileName.split(".");
-
-    console.log("Reactive:", functionName, `\n${file}`);
-
-    exports[functionName] = methodCallback;
-  } else if (availableMethods.includes(method)) {
-    const routePath = getRoutePath(file, baseDir);
-    console.log("Route", method.toUpperCase(), routePath, `\n${file}`);
-    app[method as keyof express.Application](routePath, methodCallback);
-  } else console.log("Method not supported", method, file);
+// Define and export the createTodo function
+export const createTodo = https.onRequest(async (request, response) => {
+  console.log("Creating todo_");
+  response.send("Creating todo_!");
 });
 
-// Fallback route for handling invalid routes
-app.use((req, res) => {
-  res.status(404).json({ error: "Route not found" });
+// Define and export the helloWorld function
+export const helloWorld = https.onRequest((request, response) => {
+  response.send("Hello from Firebase!");
 });
 
-// Export the Express app as a Firebase Function
-exports.api = functions.https.onRequest(app);
+// Define and export the updateTodo function
+export const updateTodo = https.onCall(async (data, context) => {
+  if (!context.auth) {
+    throw new https.HttpsError("unauthenticated", "User must be authenticated");
+  }
+  // const todoRef = db.collection("todos").doc(data.id);
+  // await todoRef.update({
+  //   text: data.text,
+  //   completed: data.completed,
+  // });
+  return { message: "Todo updated" };
+});
+
+// Define and export the deleteTodo function
+export const deleteTodo = https.onCall(async (data, context) => {
+  if (!context.auth) {
+    throw new https.HttpsError("unauthenticated", "User must be authenticated");
+  }
+  // const todoRef = db.collection("todos").doc(data.id);
+  // await todoRef.delete();
+  return { message: "Todo deleted" };
+});

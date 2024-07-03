@@ -1,7 +1,7 @@
 import * as admin from "firebase-admin";
 import { FieldValue } from "firebase-admin/firestore";
-import { TodoRepository } from "@myapp/core/src/services/Todo/types";
-import { Todo } from "@myapp/core/src/domain/todo";
+import { TodoRepository } from "@repo/core/src/services/Todo/types";
+import { Todo } from "@repo/core/src/domain/todo";
 
 export class TodoFirebaseRepository implements TodoRepository {
   db: admin.firestore.Firestore;
