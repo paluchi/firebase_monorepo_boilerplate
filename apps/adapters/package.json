@@ -1,0 +1,16 @@
+{
+  "name": "@todo/adapters",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "clean": "rimraf lib",
+    "build": "tsc",
+    "build:watch": "tsc --watch"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@todo/core": "workspace:*"
+  }
+}

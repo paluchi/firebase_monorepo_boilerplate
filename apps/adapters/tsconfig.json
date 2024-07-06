@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./",
+    "module": "commonjs",
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "outDir": "./lib",
+    "rootDir": "./src",
+    "sourceMap": true,
+    "strict": true,
+    "target": "ES2020",
+    "composite": true,
+    "declaration": true,
+    "paths": {
+      "@todo/core/*": ["../core/src/*"]
+    }
+  },
+  "compileOnSave": true,
+  "include": [
+    "src"
+  ],
+  "references": [
+    { "path": "../core" }
+  ]
+}

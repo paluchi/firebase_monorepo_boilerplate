@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./",
+    "module": "commonjs",
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "sourceMap": true,
+    "strict": true,
+    "target": "es2017",
+    "declaration": true,
+    "composite": true
+  },
+  "compileOnSave": true,
+  "include": [
+    "src"
+  ]
+}

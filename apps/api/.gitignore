@@ -1,0 +1,15 @@
+# Compiled JavaScript files
+lib
+dist
+isolate
+.turbo
+
+# TypeScript v1 declaration files
+typings/
+
+# Node.js dependency directory
+node_modules/
+*.local
+
+# Compiled TypeScript files
+tsconfig.tsbuildinfo
