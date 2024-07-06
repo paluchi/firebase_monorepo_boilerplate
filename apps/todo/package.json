@@ -12,22 +12,28 @@
     "build-web": "cd packages/web && npm run build",
     "run-web": "cd packages/web && npm run start",
     "dev": "npm run build && run-p build:watch emulate run-web",
-    "deploy:functions": "node deploy.js functions",
-    "deploy:hosting": "node deploy.js hosting",
-    "deploy:firestore": "firebase deploy --only firestore",
-    "deploy:all": "firebase deploy"
+    "deploy:fns:api": "cd packages/api && npm run deploy",
+    "deploy:hosting:web": "cd packages/web && npm run deploy",
+    "deploy:firestore": "firebase deploy --only firestore"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "firebase-functions": "^5.0.1",
-    "zod": "^3.23.8"
+    "npm-run-all": "^4.1.5",
+    "typescript": "^4.9.0"
   },
   "devDependencies": {
     "cross-env": "^7.0.3",
     "inquirer": "^9.3.4",
     "npm-run-all": "^4.1.5",
+    "firebase-functions-test": "^3.1.0",
+    "@types/node": "^20.12.12",
+    "eslint": "8",
+    "tsup": "^8.0.2",
+    "typescript": "^5.4.5",
+    "chokidar-cli": "^3.0.0",
+    "ts-node": "^10.0.0",
     "firebase-tools-with-isolate": "^13.11.2"
   }
 }
