@@ -1,5 +1,5 @@
 import { TodoFirebaseRepository } from "@repo/adapters/repositories/firebase/Todo.js";
-import { TodoService } from "../../core/src/services/Todo/index.js";
+import { TodoService } from "@repo/core/src/services/Todo/index.js";
 import { initializeApp } from "firebase-admin/app";
 import { getFirestore } from "firebase-admin/firestore";
 
