@@ -120,7 +120,16 @@ app.use((req, res) => {
 });
 
 // Export the Express app as a Firebase Function
-export const api = functions.https.onRequest(app);
+export const api = functions.https.onRequest((req, res) => {
+  res.set('Access-Control-Allow-Origin', '*');
+  res.set('Access-Control-Allow-Methods', 'GET, POST, PATCH, DELETE');
+  res.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  if (req.method === 'OPTIONS') {
+    res.status(204).send('');
+  } else {
+    app(req, res);
+  }
+});
 
 ${exportsContent}
 `;
@@ -133,10 +142,9 @@ ${exportsContent}
     });
 
     // Write the generated code to a file
-    fs.writeFileSync(
-      path.join(__dirname, "index.ts"),
-      formattedContent
-    );
+    const outputPath = path.join(__dirname, "index.ts");
+    fs.writeFileSync(outputPath, formattedContent);
+    console.log(`File written successfully to ${outputPath}`);
   } catch (error) {
     console.error("Error formatting or writing the file:", error);
   }

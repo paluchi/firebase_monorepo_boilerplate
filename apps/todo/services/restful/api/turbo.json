@@ -1,0 +1,19 @@
+{
+  "extends": ["//"],
+  "globalDependencies": [".env"],
+  "pipeline": {
+    "build": {
+      "env": ["DEMO_ENV_VAR"],
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**"]
+    },
+    "test": {
+      "dependsOn": ["^build"],
+      "outputs": ["coverage/**"],
+      "inputs": ["src/**/*.tsx", "src/**/*.ts"]
+    },
+    "lint": {
+      "dependsOn": ["^lint"]
+    }
+  }
+}

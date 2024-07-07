@@ -1,7 +1,12 @@
 import * as fs from "fs";
 import * as path from "path";
 import express from "express";
-import * as functions from "firebase-functions";
+import prettier from "prettier";
+import { fileURLToPath } from "url";
+
+// Derive __filename and __dirname from import.meta.url
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const availableMethods = ["get", "post", "put", "patch", "delete"];
 
@@ -20,7 +25,7 @@ const getEndpointFiles = (dir: string): string[] => {
 
     if (stat && stat.isDirectory()) {
       results = results.concat(getEndpointFiles(filePath));
-    } else if (file.endsWith(".endpoint.js") || file.endsWith(".reactive.js")) {
+    } else if (file.endsWith(".endpoint.ts") || file.endsWith(".reactive.ts")) {
       results.push(filePath);
     }
   });
@@ -71,24 +76,43 @@ endpointFiles
   })
   .reverse();
 
-endpointFiles.forEach((file) => {
-  const methodCallback = require(file).default;
-  const fileName = path.basename(file);
+let imports = "";
+let routes = "";
+let exportsContent = "";
 
+endpointFiles.forEach((file, index) => {
+  let importPath = `./${path.relative(__dirname, file).replace(/\\/g, "/")}`;
+  importPath = importPath.replace(/\.ts$/, ""); // Remove the .ts extension
+  const fileName = path.basename(file);
   const method = fileName.split(".")[0];
 
   if (method === "reactive") {
     const [functionName] = fileName.split(".");
 
-    console.log("Reactive:", functionName, `\n${file}`);
-
-    exports[functionName] = methodCallback;
+    imports += `import ${functionName} from "${importPath}";\n`;
+    exportsContent += `export const ${functionName} = ${functionName};\n`;
   } else if (availableMethods.includes(method)) {
     const routePath = getRoutePath(file, baseDir);
-    console.log("Route", method.toUpperCase(), routePath, `\n${file}`);
-    app[method as keyof express.Application](routePath, methodCallback);
-  } else console.log("Method not supported", method, file);
+    const functionName = `endpoint${index}`;
+
+    imports += `import ${functionName} from "${importPath}";\n`;
+    routes += `app.${method}("${routePath}", ${functionName});\n`;
+  } else {
+    console.log("Method not supported", method, file);
+  }
 });
+
+// Generate the final content
+const content = `
+import express from "express";
+import * as functions from "firebase-functions";
+
+${imports}
+
+const app = express();
+app.use(express.json());
+
+${routes}
 
 // Fallback route for handling invalid routes
 app.use((req, res) => {
@@ -96,4 +120,32 @@ app.use((req, res) => {
 });
 
 // Export the Express app as a Firebase Function
-export const api = functions.https.onRequest(app);
+export const api = functions.https.onRequest((req, res) => {
+  res.set('Access-Control-Allow-Origin', '*');
+  res.set('Access-Control-Allow-Methods', 'GET, POST, PATCH, DELETE');
+  res.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  if (req.method === 'OPTIONS') {
+    res.status(204).send('');
+  } else {
+    app(req, res);
+  }
+});
+
+${exportsContent}
+`;
+
+(async () => {
+  try {
+    // Format the generated code with Prettier
+    const formattedContent = await prettier.format(content, {
+      parser: "typescript",
+    });
+
+    // Write the generated code to a file
+    const outputPath = path.join(__dirname, "index.ts");
+    fs.writeFileSync(outputPath, formattedContent);
+    console.log(`File written successfully to ${outputPath}`);
+  } catch (error) {
+    console.error("Error formatting or writing the file:", error);
+  }
+})();

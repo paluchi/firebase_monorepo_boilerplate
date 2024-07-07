@@ -13,7 +13,7 @@ export class TodoService {
   }
 
   public async createTodo(data: Todo) {
-    TodoSchema.parse(data);
+    // TodoSchema.parse(data);
 
     return this.todoRepository.create(data);
   }

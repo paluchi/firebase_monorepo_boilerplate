@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "esModuleInterop": true,
+    "lib": ["ES2020", "DOM"],
+    "baseUrl": "./",
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "sourceMap": true,
+    "strict": true,
+    "paths": {
+      "@todo/core/*": ["../../packages/core/src/*"],
+      "@todo/adapters/*": ["../../packages/adapters/src/*"]
+    }
+  },
+  "ts-node": { "esm": true },
+  "compileOnSave": true,
+  "include": [
+    "src"
+  ],
+  "references": [
+    { "path": "../../../packages/core" },
+    { "path": "../../../packages/adapters" }
+  ]
+}

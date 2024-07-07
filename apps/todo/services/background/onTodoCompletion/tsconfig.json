@@ -13,8 +13,8 @@
     "sourceMap": true,
     "strict": true,
     "paths": {
-      "@todo/core/*": ["../core/src/*"],
-      "@todo/adapters/*": ["../adapters/src/*"]
+      "@todo/core/*": ["../../packages/core/src/*"],
+      "@todo/adapters/*": ["../../packages/adapters/src/*"]
     }
   },
   "ts-node": { "esm": true },
@@ -23,7 +23,7 @@
     "src"
   ],
   "references": [
-    { "path": "../core" },
-    { "path": "../adapters" }
+    { "path": "../../../packages/core" },
+    { "path": "../../../packages/adapters" }
   ]
 }

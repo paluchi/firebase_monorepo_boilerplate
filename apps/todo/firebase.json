@@ -10,15 +10,6 @@
       "isolate": true
     }
   ],
-  "hosting": [
-    {
-      "site": "todo-project-dev-6f87b",
-      "public": "./packages/web/build",
-      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
-      "predeploy": ["npm --prefix packages/web run build"],
-      "isolate": true
-    }
-  ],
   "firestore": {
     "rules": "./packages/database/firestore.rules",
     "indexes": "./packages/database/firestore.indexes.json"
@@ -35,7 +26,8 @@
       "port": 5000
     },
     "auth": {
-      "port": 9099
+      "port": 9099,
+      "enabled": false
     }
   }
 }

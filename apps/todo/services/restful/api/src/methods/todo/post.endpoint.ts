@@ -3,7 +3,8 @@ import { todoService } from "../../context.js";
 
 export default async (req: Request, res: Response) => {
   try {
-    const todos = await todoService.getTodos();
+    const todoData = req.body;
+    const todos = await todoService.createTodo(todoData);
 
     res.status(200).json({ todos });
   } catch (error) {
