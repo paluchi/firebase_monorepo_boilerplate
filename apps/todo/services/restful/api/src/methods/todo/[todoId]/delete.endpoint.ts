@@ -1,8 +1,10 @@
 import { Request, Response } from "express";
-import { todoService } from "../../../context.js";
+import { getTodoService } from "@/context.js";
 
 export default async (req: Request, res: Response) => {
   try {
+    const todoService = await getTodoService();
+
     const todoId = req.params.todoId;
     const todos = await todoService.deleteTodo(todoId);
 

@@ -2,6 +2,8 @@ packages:
   - "apps/*"
   - "apps/*/packages/*"
   - "apps/*/services/*"
+  - "apps/*/services/background/*"
+  - "apps/*/services/restful/*"
   - "apps/*/apps/*"
   - "packages/*"
   - "services/*"

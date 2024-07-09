@@ -10,15 +10,15 @@
   ],
   "scripts": {
     "type:check": "tsc --noEmit",
-    "generate-routes": "node --loader ts-node/esm src/generateRoutes.ts",
-    "build": "npm run generate-routes && tsup-node",
-    "build:watch": "chokidar 'src/**/*.ts' '../core/src/**/*' '../adapters/src/**/*' --ignore 'dist/**' --ignore 'src/index.ts' -c 'npm run build'",
+    "build": "tsup-node",
+    "build:watch": "chokidar 'src/**/*.ts' '../../../packages/core/src/**/*' '../../../packages/adapters/src/**/*' --ignore 'dist/**' -c 'npm run build'",
     "emulate": "firebase emulators:start --only functions",
     "deploy": "firebase deploy --only functions"
   },
   "license": "MIT",
   "dependencies": {
     "@google-cloud/functions-framework": "^3.4.0",
+    "@google-cloud/secret-manager": "^5.6.0",
     "@todo/adapters": "workspace:*",
     "@todo/core": "workspace:*",
     "body-parser": "^1.20.2",

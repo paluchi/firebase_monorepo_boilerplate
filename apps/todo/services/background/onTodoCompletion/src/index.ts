@@ -1,34 +1,23 @@
-import express from "express";
-import * as functions from "firebase-functions";
+import functions from "firebase-functions";
 
-import endpoint0 from "./methods/todo/post.endpoint";
-import endpoint1 from "./methods/todo/get.endpoint";
-import endpoint2 from "./methods/todo/[todoId]/patch.endpoint";
-import endpoint3 from "./methods/todo/[todoId]/get.endpoint";
-import endpoint4 from "./methods/todo/[todoId]/delete.endpoint";
+export const onTodoCompletedChange = functions.firestore
+  .document("todos/{todoId}")
+  .onUpdate((change, context) => {
+    const beforeData = change.before.data(); // Data before the update
+    const afterData = change.after.data(); // Data after the update
 
-const app = express();
-app.use(express.json());
+    // Check if the completed field exists and has changed
+    const beforeCompleted = beforeData.completed;
+    const afterCompleted = afterData.completed;
 
-app.post("/todo", endpoint0);
-app.get("/todo", endpoint1);
-app.patch("/todo/:todoId", endpoint2);
-app.get("/todo/:todoId", endpoint3);
-app.delete("/todo/:todoId", endpoint4);
+    // Only proceed if the 'completed' field has changed
+    if (beforeCompleted !== afterCompleted) {
+      console.log(
+        `Todo ${context.params.todoId} completed status changed:`,
+        afterCompleted
+      );
+      // Add your custom logic here, such as sending a notification or updating another document
+    }
 
-// Fallback route for handling invalid routes
-app.use((req, res) => {
-  res.status(404).json({ error: "Route not found" });
-});
-
-// Export the Express app as a Firebase Function
-export const api = functions.https.onRequest((req, res) => {
-  res.set("Access-Control-Allow-Origin", "*");
-  res.set("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE");
-  res.set("Access-Control-Allow-Headers", "Content-Type, Authorization");
-  if (req.method === "OPTIONS") {
-    res.status(204).send("");
-  } else {
-    app(req, res);
-  }
-});
+    return null;
+  });

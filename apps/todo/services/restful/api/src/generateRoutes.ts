@@ -1,8 +1,8 @@
 import * as fs from "fs";
 import * as path from "path";
-import express from "express";
 import prettier from "prettier";
 import { fileURLToPath } from "url";
+import express from "express";
 
 // Derive __filename and __dirname from import.meta.url
 const __filename = fileURLToPath(import.meta.url);
@@ -15,8 +15,11 @@ const app = express();
 // Middleware to parse JSON bodies
 app.use(express.json());
 
-const getEndpointFiles = (dir: string): string[] => {
-  let results: string[] = [];
+const getEndpointFiles = (
+  dir: string
+): { endpoints: string[]; middlewares: string[] } => {
+  let endpoints: string[] = [];
+  let middlewares: string[] = [];
   const list = fs.readdirSync(dir);
 
   list.forEach((file) => {
@@ -24,13 +27,17 @@ const getEndpointFiles = (dir: string): string[] => {
     const stat = fs.statSync(filePath);
 
     if (stat && stat.isDirectory()) {
-      results = results.concat(getEndpointFiles(filePath));
+      const subResults = getEndpointFiles(filePath);
+      endpoints = endpoints.concat(subResults.endpoints);
+      middlewares = middlewares.concat(subResults.middlewares);
     } else if (file.endsWith(".endpoint.ts") || file.endsWith(".reactive.ts")) {
-      results.push(filePath);
+      endpoints.push(filePath);
+    } else if (file.endsWith(".middleware.ts")) {
+      middlewares.push(filePath);
     }
   });
 
-  return results;
+  return { endpoints, middlewares };
 };
 
 const getRoutePath = (filePath: string, baseDir: string): string => {
@@ -56,7 +63,8 @@ const getRoutePath = (filePath: string, baseDir: string): string => {
 };
 
 const baseDir = path.join(__dirname, "methods");
-const endpointFiles = getEndpointFiles(baseDir);
+const { endpoints: endpointFiles, middlewares: middlewareFiles } =
+  getEndpointFiles(baseDir);
 
 // Sort endpoint files by specificity and then by presence of parameters
 endpointFiles
@@ -79,7 +87,30 @@ endpointFiles
 let imports = "";
 let routes = "";
 let exportsContent = "";
+const routeMap = new Map<
+  string,
+  { middlewares: string[]; endpoints: string[] }
+>();
 
+// Process middleware files
+middlewareFiles.forEach((file, index) => {
+  const importPath =
+    `./${path.relative(__dirname, file).replace(/\\/g, "/")}`.replace(
+      /\.ts$/,
+      ""
+    );
+  const middlewareName = `middleware${index}`;
+  const routePath = getRoutePath(file, baseDir);
+
+  imports += `import ${middlewareName} from "${importPath}";\n`;
+
+  if (!routeMap.has(routePath)) {
+    routeMap.set(routePath, { middlewares: [], endpoints: [] });
+  }
+  routeMap.get(routePath)!.middlewares.push(middlewareName);
+});
+
+// Process endpoint files
 endpointFiles.forEach((file, index) => {
   let importPath = `./${path.relative(__dirname, file).replace(/\\/g, "/")}`;
   importPath = importPath.replace(/\.ts$/, ""); // Remove the .ts extension
@@ -88,7 +119,6 @@ endpointFiles.forEach((file, index) => {
 
   if (method === "reactive") {
     const [functionName] = fileName.split(".");
-
     imports += `import ${functionName} from "${importPath}";\n`;
     exportsContent += `export const ${functionName} = ${functionName};\n`;
   } else if (availableMethods.includes(method)) {
@@ -96,10 +126,26 @@ endpointFiles.forEach((file, index) => {
     const functionName = `endpoint${index}`;
 
     imports += `import ${functionName} from "${importPath}";\n`;
-    routes += `app.${method}("${routePath}", ${functionName});\n`;
+
+    if (!routeMap.has(routePath)) {
+      routeMap.set(routePath, { middlewares: [], endpoints: [] });
+    }
+    routeMap
+      .get(routePath)!
+      .endpoints.push(`app.${method}("${routePath}", ${functionName});`);
   } else {
     console.log("Method not supported", method, file);
   }
+});
+
+// Generate routes with middlewares applied before endpoints
+routeMap.forEach((value, routePath) => {
+  value.middlewares.forEach((middleware) => {
+    routes += `app.use("${routePath}", ${middleware});\n`;
+  });
+  value.endpoints.forEach((endpoint) => {
+    routes += `${endpoint}\n`;
+  });
 });
 
 // Generate the final content

@@ -1,4 +1,4 @@
-import { Todo, TodoSchema } from "../../domain/todo";
+import { Todo } from "../../domain/todo";
 import { TodoRepository } from "./types";
 
 export class TodoService {

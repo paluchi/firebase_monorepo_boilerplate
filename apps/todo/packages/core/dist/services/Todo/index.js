@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TodoService = void 0;
-const todo_1 = require("../../domain/todo");
 class TodoService {
     constructor(todoRepository) {
         this.todoRepository = todoRepository;
@@ -10,7 +9,7 @@ class TodoService {
         return this.todoRepository.getAll();
     }
     async createTodo(data) {
-        todo_1.TodoSchema.parse(data);
+        // TodoSchema.parse(data);
         return this.todoRepository.create(data);
     }
     async updateTodo(id, data) {

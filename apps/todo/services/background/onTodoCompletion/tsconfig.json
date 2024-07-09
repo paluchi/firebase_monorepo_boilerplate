@@ -12,7 +12,9 @@
     "rootDir": "./src",
     "sourceMap": true,
     "strict": true,
+    "resolveJsonModule": true,
     "paths": {
+      "@/*": ["./src/*"],
       "@todo/core/*": ["../../packages/core/src/*"],
       "@todo/adapters/*": ["../../packages/adapters/src/*"]
     }

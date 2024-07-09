@@ -1,12 +1,7 @@
 import React, { useEffect, useState } from "react";
-import {
-  onAuthStateChanged,
-  signInWithPopup,
-  GoogleAuthProvider,
-} from "firebase/auth";
-import { auth } from "./utils/firebase";
 import "./App.css";
-import { createTodo, deleteTodo, getTodos, updateTodo } from "./utils/api";
+import { UserProvider, useUser } from "./contexts/userContext";
+import { useTodoApi } from "./hooks/useTodo";
 
 interface Todo {
   id: string;
@@ -15,20 +10,17 @@ interface Todo {
 }
 
 const App: React.FC = () => {
+  const { isLoggedIn, login, logout } = useUser(); // Add logout to the destructured values
+  const { createTodo, getTodos, deleteTodo, updateTodo, getPrivateAuth } =
+    useTodoApi();
   const [todos, setTodos] = useState<Todo[]>([]);
   const [text, setText] = useState("");
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setIsLoggedIn(true);
-        fetchTodos();
-      } else {
-        setIsLoggedIn(false);
-      }
-    });
-  }, []);
+    if (isLoggedIn) {
+      fetchTodos();
+    }
+  }, [isLoggedIn]);
 
   const fetchTodos = async () => {
     const todosRes = await getTodos();
@@ -62,13 +54,11 @@ const App: React.FC = () => {
     );
   };
 
-  const handleLogin = async () => {
-    const provider = new GoogleAuthProvider();
-    try {
-      await signInWithPopup(auth, provider);
-    } catch (error) {
-      console.error("Error during login:", error);
-    }
+  const testPrivateMethod = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const response = await getPrivateAuth();
+    console.log("response", response);
   };
 
   return (
@@ -76,6 +66,11 @@ const App: React.FC = () => {
       <h1>Todo App</h1>
       {isLoggedIn ? (
         <>
+          <div className="user-controls">
+            <button onClick={logout} className="logout-button">
+              Log Out
+            </button>
+          </div>
           <form onSubmit={handleAddTodo} className="todo-form">
             <input
               type="text"
@@ -86,6 +81,13 @@ const App: React.FC = () => {
             />
             <button type="submit" className="todo-button">
               Add Todo
+            </button>
+            <button
+              type="button"
+              className="todo-button"
+              onClick={testPrivateMethod}
+            >
+              Test private
             </button>
           </form>
           <ul className="todo-list">
@@ -115,7 +117,7 @@ const App: React.FC = () => {
       ) : (
         <>
           <p>Please log in to manage your todos.</p>
-          <button onClick={handleLogin} className="login-button">
+          <button onClick={login} className="login-button">
             Log In
           </button>
         </>
@@ -124,4 +126,10 @@ const App: React.FC = () => {
   );
 };
 
-export default App;
+const WrappedApp: React.FC = () => (
+  <UserProvider>
+    <App />
+  </UserProvider>
+);
+
+export default WrappedApp;
