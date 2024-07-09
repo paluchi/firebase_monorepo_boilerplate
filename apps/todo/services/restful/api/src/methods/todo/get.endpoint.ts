@@ -3,8 +3,6 @@ import { getTodoService } from "@/context.js";
 
 export default async (req: Request, res: Response) => {
   try {
-    console.log("GET /todo");
-
     const todoService = await getTodoService();
 
     const todos = await todoService.getTodos();

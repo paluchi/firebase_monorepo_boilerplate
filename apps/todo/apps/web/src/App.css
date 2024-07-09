@@ -1,23 +1,72 @@
-/* App.css */
+.app {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: white;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
 
-.App {
-  text-align: center;
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+h1 {
+  color: var(--primary-color);
+  margin: 0;
+}
+
+.btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-primary {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.btn-secondary {
+  background-color: var(--secondary-color);
+  color: var(--text-color);
+}
+
+.btn-active {
+  background-color: var(--primary-color);
+  color: white;
 }
 
 .todo-form {
-  margin: 20px 0;
+  display: flex;
+  margin-bottom: 20px;
 }
 
 .todo-input {
-  padding: 10px;
-  margin-right: 10px;
+  flex-grow: 1;
+  padding: 8px;
   font-size: 16px;
+  border: 1px solid #ddd;
+  border-radius: 4px 0 0 4px;
 }
 
-.todo-button {
-  padding: 10px 20px;
-  font-size: 16px;
-  cursor: pointer;
+.todo-form .btn {
+  border-radius: 0 4px 4px 0;
+}
+
+.todo-filters {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.todo-filters .btn {
+  margin: 0 5px;
 }
 
 .todo-list {
@@ -28,25 +77,43 @@
 .todo-item {
   display: flex;
   align-items: center;
-  margin: 10px 0;
+  padding: 10px;
+  background-color: white;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  transition: background-color 0.3s ease;
 }
 
-.todo-item input[type="text"] {
-  margin-left: 10px;
+.todo-item:hover {
+  background-color: var(--secondary-color);
+}
+
+.todo-item.completed .todo-text {
+  text-decoration: line-through;
+  color: var(--completed-color);
+}
+
+.todo-text {
   flex-grow: 1;
+  margin: 0 10px;
   padding: 5px;
+  border: none;
+  background-color: transparent;
   font-size: 16px;
 }
 
-.todo-item button {
-  margin-left: 10px;
-  padding: 5px 10px;
-  font-size: 16px;
-  cursor: pointer;
+.btn-toggle,
+.btn-delete {
+  padding: 5px;
+  font-size: 14px;
 }
 
-.login-button {
-  padding: 10px 20px;
-  font-size: 16px;
-  cursor: pointer;
+.btn-delete {
+  color: var(--delete-color);
+}
+
+.login-message {
+  text-align: center;
+  font-size: 18px;
+  margin-top: 20px;
 }

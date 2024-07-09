@@ -3,9 +3,9 @@ import { TodoService } from "@todo/core/src/services/Todo";
 import { initializeApp, cert } from "firebase-admin/app";
 import { getFirestore } from "firebase-admin/firestore";
 import { SecretManagerServiceClient } from "@google-cloud/secret-manager";
+import * as functions from "firebase-functions";
 
 let todoServiceInstance: TodoService | null = null;
-
 let initialized = false;
 
 export const initialize = async () => {
@@ -13,8 +13,10 @@ export const initialize = async () => {
   const client = new SecretManagerServiceClient();
 
   async function accessSecretVersion(secretName: string) {
+    const projectId =
+      process.env.GCLOUD_PROJECT || functions.config().project.id;
     const [version] = await client.accessSecretVersion({
-      name: `projects/todo-project-dev-6f87b/secrets/${secretName}/versions/latest`,
+      name: `projects/${projectId}/secrets/${secretName}/versions/latest`,
     });
 
     if (version.payload?.data) {

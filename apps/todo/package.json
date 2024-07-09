@@ -15,10 +15,7 @@
     "dev:front": "cd apps/web && npm run start",
     "dev:back": "run-p build:api build:background && run-p build:watch emulate",
     "dev": "run-p dev:back dev:front",
-    "deploy:fns:api": "cd services/restful/api && npm run deploy",
-    "deploy:fns:onTodoCompletion": "cd services/background/onTodoCompletion && npm run deploy",
-    "deploy:hosting:web": "cd apps/web && npm run deploy",
-    "deploy:firestore": "firebase deploy --only firestore"
+    "deploy": "./deploy.sh"
   },
   "keywords": [],
   "author": "",

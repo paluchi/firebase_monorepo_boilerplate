@@ -18,6 +18,15 @@
       "isolate": true
     }
   ],
+  "hosting": [
+    {
+      "public": "./apps/web/build",
+      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+      "site": "todo-project-dev-6f87b",
+      "predeploy": ["npm run build"],
+      "isolate": true
+    }
+  ],
   "firestore": {
     "rules": "./packages/database/firestore.rules",
     "indexes": "./packages/database/firestore.indexes.json"

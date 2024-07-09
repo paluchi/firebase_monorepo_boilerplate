@@ -14,7 +14,7 @@
     "build": "npm run generate-routes && tsup-node",
     "build:watch": "chokidar 'src/**/*.ts' '../../../packages/core/src/**/*' '../../../packages/adapters/src/**/*' --ignore 'dist/**' --ignore 'src/index.ts' -c 'npm run build'",
     "emulate": "firebase emulators:start --only functions",
-    "deploy": "firebase deploy --only functions"
+    "deploy": "firebase deploy --project default --only functions"
   },
   "license": "MIT",
   "dependencies": {

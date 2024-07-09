@@ -1,6 +1,7 @@
 {
   "functions": [
     {
+      "friendlyName": "Api",
       "source": ".",
       "runtime": "nodejs20",
       "isolate": true,

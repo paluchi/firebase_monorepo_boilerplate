@@ -6,7 +6,6 @@ export default async (req: Request, res: Response) => {
     const todoData = req.body;
 
     const todoService = await getTodoService();
-
     const todos = await todoService.createTodo(todoData);
 
     res.status(200).json({ todos });

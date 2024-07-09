@@ -1,6 +1,7 @@
 {
   "hosting": [
     {
+      "friendlyName": "Web",
       "site": "todo-project-dev-6f87b",
       "public": "./build",
       "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],

@@ -1,5 +1,8 @@
 {
   "projects": {
-    "default": "todo-project-dev-6f87b"
+    "default": "todo-project-dev-6f87b",
+    "dev": "todo-project-dev-6f87b",
+    "staging": "",
+    "prod": "todo-project-prod"
   }
 }

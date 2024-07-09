@@ -1,6 +1,7 @@
 {
   "functions": [
     {
+      "friendlyName": "Background",
       "source": ".",
       "runtime": "nodejs20",
       "isolate": true,
